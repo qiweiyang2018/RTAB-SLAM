@@ -94,7 +94,7 @@ In the MCL example below all particles are uniformly distributed initially. In t
 
 ### SLAM Comparison
 
-![Comp](./images/slam-compare.png)
+![Comparison](./images/slamcompare.png)
 
 [Reference] (https://arxiv.org/abs/1707.09808) 
 
