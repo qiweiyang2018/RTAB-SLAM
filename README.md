@@ -5,9 +5,9 @@
 ### Abstract
 
 Robot localization and mapping are essential in robotics. Different problems are formed according to availability of the information. However, if
-neither of them is known, this problem becomes Simultaneous Localization and Mapping (SLAM for short). There are several 
-
-
+neither of them is known, this problem becomes Simultaneous Localization and Mapping (SLAM for short). There are several slam algorithms: 
+RGBD-slam, RTAB-SLAM, ORB-SLAM. In this project, RTAB-SLAM, Real Time Appearance Based Mapping, is used to construct the environment map.
+  
 ### Introduction
 
 Robot localization is essential to solve robot path planning / navigation tasks. Localization problem is that, a map and the robot's 
@@ -17,6 +17,7 @@ are combined to generate very accurate result. Robotics motion, IMU measurements
 carlo method is applied for further process.
 
 ![localization](./images/kfandmc.png)  
+[Reference] (https://ieeexplore.ieee.org/document/4650585) 
 
 On the other hand, if the map is unknown to the robot, while the initial poses are still known. The robot needs to construct the map about its environmetn 
 while it is navigating in the environment, this is called mapping. After the map is constructed, path planning and navigation can be performed sequentially.
@@ -26,17 +27,58 @@ Further more, if both the map and initial poses are unknown to the robot, the ro
 poses, this problem is called SLAM. How can the robot achieve this? The inputs for the problem
 are measurements and control, and outputs are poses (trajectory is comprised of series of poses). 
 
-![gmapping](./images/gmap.png)  
+![SLAM](./images/slam.png)  
+[Reference] (Udacity Robotics Course) 
 
-Planning under uncertainties, which are resulted from inaccurate controller, imperfect sensors, 
-unexpected environments, etc, is a quite challenging. Accurate estimation of the robot states or poses, which localization aims to accomplish, is critical in decision making under these
-uncertainty.
-      
-There are several powerful algorithms to estimate the robot location, two of which are covered in this project, Kalman Filter and Monte Carlo Localization. ROS community provides packages like AMCL and Navigation
-to allow users to easily implement these algorithms in Gazebo simulator.  
+## 2. Project Goal
 
-## 1. Introduction
+The main purpose of this project is to get me familiar with RTAB-SLAM package, and how to set up the environment to make it work properly.
+The difficulty of this project is mainly due to the complex configuration of different files, such as .world, urdf file, rtabmap_ros parameters, etc.
+ 
 
+## 3. SLAM Challenges
+
+Big challenges in SLAM are mainly due to high dimensions. The continuous parameter space composed of the robot poses and the location 
+of the objects is highly dimensional. While mapping the environment and localizing itself, the robot will encounter many objects and 
+have to keep track of each one of them. Thus, the number of variables will increase with time, and this makes the problem highly 
+dimensional and challenging to compute the posterior.
+
+In addition, the discrete parameter space is composed out of the correspondence values, and is also highly dimensional due to the large number 
+of correspondence variables. Not only that, the correspondence values increase exponentially over time since the robot will keep sensing 
+the environment and relating the newly detected objects to the previously detected ones. Even if you assume known correspondence values, 
+the posterior over maps is still highly dimensional.
+
+## 4. RTAB-Mapping
+
+RTAB-Map (Real-Time Appearance-Based Mapping) is a RGB-D, Stereo and Lidar Graph-Based SLAM approach based on an incremental 
+appearance-based loop closure detector. The loop closure detector uses a bag-of-words approach to determinate how likely a new 
+image comes from a previous location or a new location. When a loop closure hypothesis is accepted, a new constraint is added to 
+the map’s graph, then a graph optimizer minimizes the errors in the map. A memory management approach is used to limit the number 
+of locations used for loop closure detection and graph optimization, so that real-time constraints on large-scale environments 
+are always respected. RTAB-Map can be used alone with a handheld Kinect, a stereo camera or a 3D lidar for 6DoF mapping, or on a 
+robot equipped with a laser rangefinder for 3DoF mapping.
+[rtabmap](hhttp://introlab.github.io/rtabmap/)  
+
+## 5. Scene and Robot
+
+### 5.1 Scene
+
+A new scene was built by modifying the Jackal_race environment.
+
+![robot](./images/custom.png) 
+
+
+### 5.2 Robot
+
+A simple robot was built and its information was shown below: 
+
+![robot](./images/mybot.png) 
+
+![robot](./images/tf.png) 
+
+### 5.3 Result
+
+![result](./images/map.png) 
 There are two key capabilities that a robot shall have when it moves in an environment: Localization and Mapping. Localization means the robot knows the environment or map in advance,
 and need to accurately identify where it is continuously when moving, so that it knows if it is approaching the target location in the right direction. Mapping means the robot has no idea about
 the environment in advance, but it knows its location and can continuously update the info with confidence, therefore it can map the environment simultaneously when moving. 
