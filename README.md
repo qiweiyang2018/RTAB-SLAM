@@ -16,6 +16,8 @@ to solve localization problems, one is the (extended) kalman filter, and the oth
 are combined to generate very accurate result. Robotics motion, IMU measurements, GPS, etc, are first feed into a kalman filter, and then monte
 carlo method is applied for further process.
 
+![localization](./images/kfandmc.png)  
+
 On the other hand, if the map is unknown to the robot, while the initial poses are still known. The robot needs to construct the map about its environmetn 
 while it is navigating in the environment, this is called mapping. After the map is constructed, path planning and navigation can be performed sequentially.
 
