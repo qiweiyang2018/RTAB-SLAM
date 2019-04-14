@@ -1,8 +1,14 @@
-#RTAB-SLAM Implementation in ROS
+-> # RTAB-SLAM Implementation in ROS <- 
 
-Qiwei Yang
+-> Qiwei Yang March, 27, 2019 <- 
 
 ### Abstract
+
+Robot localization and mapping are essential in robotics. Different problems are formed according to availability of the information. However, if
+neither of them is known, this problem becomes Simultaneous Localization and Mapping (SLAM for short). There are several 
+
+
+### Introduction
 
 Robot localization is essential to solve robot path planning / navigation tasks. Localization problem is that, a map and the robot's 
 initial poses are already known to the robot. It needs to accurately estimate its poses simultaneously through measurements while moving in it. Two different algorithms work very well
@@ -15,11 +21,10 @@ while it is navigating in the environment, this is called mapping. After the map
 
 
 Further more, if both the map and initial poses are unknown to the robot, the robot needs to construct the map and at the same time, estimate its
-poses, this problem is called Simultaneous Localization and Mapping (SLAM for short). How can the robot achieve this? The inputs for the problem
+poses, this problem is called SLAM. How can the robot achieve this? The inputs for the problem
 are measurements and control, and outputs are poses (trajectory is comprised of series of poses). 
 
-
-![kalmanfilter](./images/gmap.png)  
+![gmapping](./images/gmap.png)  
 
 Planning under uncertainties, which are resulted from inaccurate controller, imperfect sensors, 
 unexpected environments, etc, is a quite challenging. Accurate estimation of the robot states or poses, which localization aims to accomplish, is critical in decision making under these
@@ -87,97 +92,17 @@ The algorithm is similar to KF where motion and sensor updates are calculated in
 
 In the MCL example below all particles are uniformly distributed initially. In the following update steps the particles that better match the predicted state survive resulting in a concentration of particles around the robot estimated location.
 
-### 2.3 Filter comparison and summary
+### SLAM Comparison
 
-![Comp](./images/MCLvsEKF.png)   
+![Comp](./images/slam-compare.png)
 
-[referring to Udacity course materials] 
+[Reference] (https://arxiv.org/abs/1707.09808) 
 
-Kalman filter: no need to store all history states, only the previous state information. Can update in real-time, but not optimal for non-linear systems. 
-
-Monte Carlo Localization: Take large memory because it needs to store all history data, good for non-linear systems. 
-
-## 3 Simulation environment
-
-### 3.1 Model creation through urdf/xacro
-
-![wolrd](./images/worldmap.png)  
-
-### 3.2 Packages Used
-
-In order to launch the mobile robots, a ROS package was
-created. The robot package structure was designed as shown
-below. Udacity Bot Package:  
-
-* meshes
-* urdf
-* worlds
-* launch
-* maps
-* rviz
-* config
-
-This robot package, along with the Navigation Stack
-and AMCL packages were crucial for a complete simulation
-of a mobile robot performing and successfully solving the
-localization problem.
-
-![world](./images/world2.png)  
-
-### 3.3 Parameters
-
-To obtain most accurate localization results, several parameters were added, tested and tuned. The parameter values
-obtained for the udacity bot were tuned in an trial-and-error to see what values worked best. 
-
-See the table 1 and table 2 for the summary: 
-
-Table 1  
-Global and Local Costmap Parameters: 
-
-|Parameter   |Value | Impact   |
-|:---|:---|:---|
-| global frame  | map   | The frame does not move in the world  |
-| robot base frame  |robot footprint   | The robot's local fixed frame   |
-|update frequency   | 15.0   | system warning may occur if too high   |
-|publish frequency   |15.0    | system warning may occur if too high    |
-|width   |20.0   |The width of the map in meters   |
-|height   |20.0   | The height of the map in meters  |
-|resolution   |0.05   | same as static map |
-| static map  |true   |  incorporates mostly unchanging data  |
-| rolling window  |false   | if false, the map is global, otherwise local |
-
-
-Table 2    
-AMCL and Other Parameters: 
-
-| Parameters  | value  | Impact |
-|:---|:---|
-|min particles   | 10   | Minimum allowed number of particles|
-|max particles  |  200 | Maximum allowed number of particles |
-| obstacle range  | default = 2.5  | maximum range in meters at which to insert obstacles into the costmap using sensor data|
-| raytrace range  | default = 3.0  | maximum range in meters at which to raytrace out obstacles from the map using sensor data|
-| transform tolerance   | accuracy  |
-| inflation radius  |  0.55  |0.55 meters or more away from obstacles as having equal obstacle cost |
-| controller frequency  | 15  |  
-
-At arriving, the robot's confidence regarding its location is much higher than starting, as the robot continuously updated its status through measurements. 
-![Arrived](./images/arrive.png)    
-
-
-## 4 Customized Robot: 
-
-![mybot](./images/mybot.png)  
-
-## 5 Future Work: 
-
-* I will try to implement these packages on a real robot through Jetson TX2 board. 
-* Explore the potentials of AMCL and Navigation packages in more complicated worlds. 
-
-[article reference](https://medium.com/@fernandojaruchenunes/udacity-robotics-nd-project-6-where-am-i-8cd657063585)  
+ 
 
 [kalman filter, matlab](https://blogs.mathworks.com/headlines/2016/09/08/this-56-year-old-algorithm-is-key-to-space-travel-gps-vr-and-more/)  
 
-[Robot mapping] (http://ais.informatik.uni-freiburg.de/teaching/ws13/mapping/pdf/slam04-ekf.pdf)  
+[Robot mapping] (https://arxiv.org/abs/1707.09808)  
 
 [biorobotics kalman filter](http://biorobotics.ri.cmu.edu/papers/sbp_papers/integrated3/kleeman_kalman_basics.pdf)  
 
