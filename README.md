@@ -1,6 +1,6 @@
--> # RTAB-SLAM Implementation in ROS <- 
+-> # RTAB-SLAM Implementation <- 
 
--> Qiwei Yang March, 27, 2019 <- 
+-> By Qiwei Yang May 02, 2019 <- 
 
 ### Abstract
 
